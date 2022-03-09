@@ -60,7 +60,7 @@ router.post("/login", async(req, res, next) => {
 
         const authUser = await User.authenticate(username, password);
         if (!authUser) {
-            if (bcrypt.compare(password, user.password)) {
+            if (bcrypt.compare(password, authUser.password)) {
                 throw new ExpressError("Invalid user", 400);
             }
         }
