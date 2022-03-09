@@ -1,3 +1,19 @@
+const express = require("express");
+const router = new express.Router();
+const ExpressError = require("../expressError");
+const db = require("../db");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { BCRYPT_WORK_FACTOR, SECRET_KEY } = require("../config");
+const {
+    authenticateJWT,
+    ensureLoggedIn,
+    ensureCorrectUser,
+} = require("../middleware/auth");
+const Message = require("../models/message");
+
+
+
 /** GET /:id - get detail of message.
  *
  * => {message: {id,
@@ -27,3 +43,4 @@
  * Make sure that the only the intended recipient can mark as read.
  *
  **/
+module.exports = router;
