@@ -58,15 +58,10 @@ router.post("/login", async(req, res, next) => {
             throw new ExpressError("Username and password required", 400);
         }
 
-        const results = await db.query(
-            `SELECT username, password
-            FROM users WHERE username = $1`, [username]);
-        const user = results.rows[0];
-        if (user) {
+        const authUser = await User.authenticate(username, password);
+        if (!authUser) {
             if (bcrypt.compare(password, user.password)) {
-                return res.json({
-                    message: `Logged in!`
-                })
+                throw new ExpressError("Invalid user", 400);
             }
         }
         throw new ExpressError("Username not found", 404);
