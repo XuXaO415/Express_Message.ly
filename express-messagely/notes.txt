@@ -19,5 +19,10 @@ Payload: data to be stored in token (typically an object)
         "permission": "Admin",
         "iat": 1516239022
     }
-Signature:
+
+    Header and Payload are then encoded in Base64; just another way to express characters, storing txt. Transform into a single string.
+ 
+Signature: version of header & payload, signed with secret key 
+    -Uses algorithm specified in header
+    -Verifies the origin of sender
 
