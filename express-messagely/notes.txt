@@ -1,0 +1,23 @@
+JSON Web Tokens
+The JWT token itself is a string comprising three-parts:
+
+Header: metadata abt token (signing algorithm used & type of token)
+    It's returned as JSON
+    ex:
+    {
+        "alg": "HS256",
+        "typ": "JWT"
+    }
+
+Payload: data to be stored in token (typically an object)
+    -Often this will store things like the user ID 
+    -This is encoded, not encrypted - DO NOT STORE IMPORTANT INFO HERE!!
+    ex:
+    {
+        "sub": "1234567890",
+        "name": "John Doe",
+        "permission": "Admin",
+        "iat": 1516239022
+    }
+Signature:
+
