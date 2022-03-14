@@ -27,6 +27,14 @@ const Message = require("../models/message");
  *
  **/
 
+// get.router('/:id', ensureLoggedIn, async(req, res, next) => {
+//     try {
+
+//     } catch (e) {
+//         return next(e);
+//     }
+// })
+
 
 /** POST / - post message.
  *
@@ -34,6 +42,14 @@ const Message = require("../models/message");
  *   {message: {id, from_username, to_username, body, sent_at}}
  *
  **/
+
+// router.post('/', ensureLoggedIn async(req, res, next) => {
+//     try {
+
+//     } catch (e) {
+//         return next(e);
+//     }
+// })
 
 
 /** POST/:id/read - mark message as read:
@@ -43,4 +59,12 @@ const Message = require("../models/message");
  * Make sure that the only the intended recipient can mark as read.
  *
  **/
+
+// router.post('/:id/read', ensureLoggedIn, async(req, res, next) => {
+//     try {
+
+//     } catch (e) {
+//         return next(e);
+//     }
+// })
 module.exports = router;

@@ -104,13 +104,13 @@ router.post('/login', async(req, res, next) => {
 
 router.post('/register', async(req, res, next) => {
     try {
-        const { username, password, first_name, last_name, password } = req.body;
-        if (!username || !password || !first_name || !last_name || !password) {
+        const { username, password, first_name, last_name, phone } = req.body;
+        if (!username || !password || !first_name || !last_name || !phone) {
             throw new ExpressError("Your full credentials are needed", 400);
         }
         // Hashes password
         const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
-        const results = await db.query(`INSERT INTO users (usernam, password)
+        const results = await db.query(`INSERT INTO users (username, password)
         VALUES ($1, $2) 
         RETURNING username`, [username, hashedPassword]);
         return res.json(results.rows[0]);
