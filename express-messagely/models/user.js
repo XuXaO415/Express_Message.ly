@@ -13,20 +13,38 @@ class User {
      *    {username, password, first_name, last_name, phone}
      */
 
-    static async register({ username, password, first_name, last_name, phone }) {}
+    static async register({ username, password, first_name, last_name, phone }) {
+        const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
+        const results = await db.query(`INSERT INTO users (username, password, first_name, last_name, join_at, last_login)
+        VALUES ($1, $2, $3, $4, $5,current_timestamp, current_timestamp)
+        RETURNING username, password, first_name, last_name, phone`, [username, hashedPassword, first_name, last_name, phone])
+        return results.rows[0];
+    }
 
     /** Authenticate: is this username/password valid? Returns boolean. */
 
-    static async authenticate(username, password) {}
+    static async authenticate(username, password) {
+        const results = await db.query(` SELECT username, password FROM users WHERE username =$1`, [username]);
+        const user = results.rows[0];
+        if (user) {
+            return (await bcrypt.compare(password, user.password) === true);
+
+        }
+    }
 
     /** Update last_login_at for user */
 
-    static async updateLoginTimestamp(username) {}
+    static async updateLoginTimestamp(username) {
+        const results = await db.query(`UPDATE users SET last_login_at = current_timestamp WHERE username = $1`, [username]);
+    }
 
     /** All: basic info on all users:
      * [{username, first_name, last_name, phone}, ...] */
 
-    static async all() {}
+    static async all() {
+        const results = await db.query(`SELECT username, first_name, last_name, phone FROM users`);
+        return results.rows[0];
+    }
 
     /** Get: get user by username
      *
@@ -37,7 +55,15 @@ class User {
      *          join_at,
      *          last_login_at } */
 
-    static async get(username) {}
+    static async get(username) {
+        const results = db.query(`SELECT username, first_name, last_name, phone, join_at, last_login_at
+        FROM users
+        WHERE username = $1`, [username]);
+        if (!results.rows[0]) {
+            throw new ExpressError(`This ${username} was ot found`, 404);
+        }
+        return results.rows[0];
+    }
 
     /** Return messages from this user.
      *
