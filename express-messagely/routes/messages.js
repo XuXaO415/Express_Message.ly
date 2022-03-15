@@ -27,13 +27,17 @@ const Message = require("../models/message");
  *
  **/
 
-// get.router('/:id', ensureLoggedIn, async(req, res, next) => {
-//     try {
-
-//     } catch (e) {
-//         return next(e);
-//     }
-// })
+router.get('/:id', ensureLoggedIn, async(req, res, next) => {
+    try {
+        const msg = await Message.get(req.params.id);
+        if (req.user.username !== msg.from_user.username && req.user.username !== msg.to_user.username) {
+            throw new ExpressError("Unauthorized", 401);
+        }
+        return res.json(msg);
+    } catch (e) {
+        return next(e);
+    }
+})
 
 
 /** POST / - post message.
@@ -43,13 +47,17 @@ const Message = require("../models/message");
  *
  **/
 
-// router.post('/', ensureLoggedIn async(req, res, next) => {
-//     try {
-
-//     } catch (e) {
-//         return next(e);
-//     }
-// })
+router.post('/', ensureLoggedIn, async(req, res, next) => {
+    try {
+        if (req.user.username !== req.body.from_username) {
+            throw new ExpressError("Unauthorized", 401);
+        }
+        const msg = await Message.create(req.body);
+        return res.json(msg)
+    } catch (e) {
+        return next(e);
+    }
+})
 
 
 /** POST/:id/read - mark message as read:
@@ -60,11 +68,15 @@ const Message = require("../models/message");
  *
  **/
 
-// router.post('/:id/read', ensureLoggedIn, async(req, res, next) => {
-//     try {
-
-//     } catch (e) {
-//         return next(e);
-//     }
-// })
+router.post('/:id/read', ensureLoggedIn, async(req, res, next) => {
+    try {
+        if (req.user.username !== req.body.from_username) {
+            throw new ExpressError("Unauthorized", 401);
+        }
+        const msg = await Message.markRead(req.params.id);
+        return res.json(msg);
+    } catch (e) {
+        return next(e);
+    }
+})
 module.exports = router;
